@@ -12,13 +12,26 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".StandardActivity"/>
+        <activity
+            android:name=".TranslucentActivity"
+            android:theme="@style/translucent"/>
+        <activity
+            android:name=".SingleTaskActivity"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".SingleTopActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".SingleInstanceActivity"
+            android:launchMode="singleInstance"/>
     </application>
 
 </manifest>

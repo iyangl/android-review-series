@@ -2,7 +2,12 @@ package com.lemayn.review
 
 import android.os.Bundle
 
-class MainActivity : BaseActivity() {
+/**
+ * @author: ly
+ * @date : 2019/2/12
+ * @desc :
+ */
+class SingleInstanceActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
