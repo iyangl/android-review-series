@@ -23,9 +23,11 @@
         <activity
             android:name=".TranslucentActivity"
             android:theme="@style/translucent"/>
+        <!--自定义taskAffinity，单独创建一个任务栈-->
         <activity
             android:name=".SingleTaskActivity"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:taskAffinity="com.lemayn.review.custom"/>
         <activity
             android:name=".SingleTopActivity"
             android:launchMode="singleTop"/>

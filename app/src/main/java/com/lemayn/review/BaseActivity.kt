@@ -101,7 +101,8 @@ open class BaseActivity : AppCompatActivity() {
 
             R.id.clearTop -> {
                 val intent = Intent(this, StandardActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 startActivity(intent)
             }
 
