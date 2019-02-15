@@ -10,4 +10,9 @@
 7、affinity：当启动一个launchMode为singTask的Activity时，系统会去检测要启动的这个Activity的affinity和当前任务的affinity是否相同，如果相同的话就会把它放入到现有任务当中，如果不同则会去创建一个新的任务。而同一个程序中所有Activity的affinity默认都是相同的，这也是为什么同一个应用程序中即使声明成"singleTask"，也不会为这个Activity再去创建一个新的任务。  
 8、[切屏生命周期各版本，这篇很全](https://blog.csdn.net/qq_36713816/article/details/80538467)  
 9、生命周期流程图![生命周期流程图](https://images2015.cnblogs.com/blog/860643/201602/860643-20160201115258100-1397803685.png)    
-10、上面各条demo基本都已包含
+10、上面各条demo基本都已包含  
+11、查看Activity任务栈：  
+``adb shell dumpsys activity activities ``  
+Running activities中展示任务栈中Activity的列表。  
+附赠面试题一个：  
+``如果假设A是Standard，B是SingleTop，C是SingleTask，D是SingleInstance的启动模式，那么以A->B->C->D->A->B->C->D这种情况开启Activity，分析一下最后的工作栈是怎样的情况``
