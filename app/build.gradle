@@ -13,12 +13,27 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk{
+            moduleName "hello"
+            abiFilters "armeabi-v7a", "x86"	//这里是你想生成什么类型的就自己添加
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'	//这个是Android.mk文件的路径
+        }
+    }
+
+    dataBinding{
+        enabled =true
     }
 }
 
