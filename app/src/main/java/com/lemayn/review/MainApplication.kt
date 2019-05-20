@@ -11,11 +11,20 @@ import timber.log.Timber
  */
 class MainApplication : Application() {
 
+    companion object {
+        private var instance: MainApplication? = null
+        fun getInstance(): MainApplication {
+            return instance!!
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
+        instance = this
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
     }
+
 }

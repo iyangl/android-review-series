@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <Button
+        android:id="@+id/startLocalService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启本地服务"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/stopLocalService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="关闭本地服务"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startLocalService"/>
+
+    <Button
+        android:id="@+id/bindLocalService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="绑定本地服务"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stopLocalService"/>
+
+    <Button
+        android:id="@+id/unBindLocalService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="解绑本地服务"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bindLocalService"/>
+
+    <Button
+        android:id="@+id/startAidlService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="开启AIDL服务"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/unBindLocalService"/>
+
+    <Button
+        android:id="@+id/stopAidlService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="关闭AIDL服务"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startAidlService"/>
+
+    <TextView
+        android:id="@+id/logTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="日志："
+        app:layout_constraintBottom_toTopOf="@+id/logText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopAidlService"/>
+
+    <TextView
+        android:id="@+id/logText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logTitle"/>
+
+</android.support.constraint.ConstraintLayout>
