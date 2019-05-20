@@ -1,11 +1,10 @@
 package com.lemayn.review.aidl
 
-import android.app.Service
+import android.app.IntentService
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.lemayn.review.util.Util
-
 import timber.log.Timber
 
 /**
@@ -13,7 +12,10 @@ import timber.log.Timber
  * date  : 2019/5/18 15:18
  * desc  :
  */
-class LocalService : Service() {
+class LocalService : IntentService("LocalService") {
+    override fun onHandleIntent(intent: Intent?) {
+        Timber.i("onHandleIntent ---- Intent：%s, thread: %s", intent.toString(), Thread.currentThread())
+    }
 
     override fun onCreate() {
         Timber.i("onCreate")
