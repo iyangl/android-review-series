@@ -11,7 +11,9 @@ import android.text.method.ScrollingMovementMethod
 import android.view.View
 import com.lemayn.review.R
 import com.lemayn.review.RemoteAidlService
+import com.lemayn.review.bean.Entity
 import kotlinx.android.synthetic.main.activity_service.*
+import kotlin.random.Random
 
 
 /**
@@ -68,7 +70,10 @@ class ServiceActivity : AppCompatActivity(), View.OnClickListener {
                 append(service.log())
             } else {
                 // 需要通过Service.Stub.asInterface拿到binder对象
-                append(RemoteAidlService.Stub.asInterface(service).log())
+                val aidlService = RemoteAidlService.Stub.asInterface(service)
+                append(aidlService.log())
+                aidlService.add(Entity(Random(100).nextInt()))
+                append(aidlService.get().toString() + "的size：" + aidlService.get().size)
             }
         }
 

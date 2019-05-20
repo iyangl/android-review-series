@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.lemayn.review.RemoteAidlService
+import com.lemayn.review.bean.Entity
 import com.lemayn.review.util.Util
 import timber.log.Timber
 
@@ -35,6 +36,19 @@ class RemoteService : Service() {
     }
 
     class RemoteBinder : RemoteAidlService.Stub() {
+
+        private var list: ArrayList<Entity> = ArrayList()
+
+        override fun add(entity: Entity?) {
+            if (entity != null) {
+                list.add(entity)
+            }
+        }
+
+        override fun get(): MutableList<Entity> {
+            return list
+        }
+
         override fun log(): String {
             Timber.i("RemoteBinder ---- log")
             return String.format("process: %s, thread: %s", Util.getCurProcessName(), Thread.currentThread())
