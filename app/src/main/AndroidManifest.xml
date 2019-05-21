@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".aidl.ServiceActivity"/>
+        <activity android:name=".cp.ContentProviderActivity"/>
 
         <service android:name=".aidl.LocalService"/>
         <service
@@ -30,6 +31,11 @@
                 <action android:name="com.lemayn.review.aidl.remote"/>
             </intent-filter>
         </service>
+
+        <provider
+            android:name=".cp.RemoteProvider"
+            android:authorities="com.lemayn.review.cp.RemoteProvider"
+            android:permission="com.lemayn.review.provider"/>
     </application>
 
 </manifest>
