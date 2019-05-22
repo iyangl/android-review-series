@@ -242,7 +242,7 @@ fun format(format: String, vararg args: Any): String {
 }
 
 @Throws(IOException::class)
-fun BufferedSource.readBomAsCharset(default: Charset): Charset {
+fun readBomAsCharset(default: Charset): Charset {
   return when (select(UNICODE_BOMS)) {
     0 -> UTF_8
     1 -> UTF_16BE
