@@ -1,5 +1,9 @@
 # android-review-series
 
-## [activity-lifecycle-launchmode](https://github.com/lemayn/android-review-series/tree/activity-lifecycle-launchmode)  
-##### Activity的生命周期与启动模式  
-切换到该分支或点击超链接直接跳转
+## [master](https://github.com/lemayn/android-review-series)  
+##### master分支  
+切换到master分支查看目录
+
+#kotlin
+
+##### 所有内容出自[files目录下PDF文档](./files/kotlin-reference-chinese.pdf)，文档来源[kotlin语言中文站](https://www.kotlincn.net/)
