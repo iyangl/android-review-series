@@ -115,9 +115,12 @@ class Transmitter(
   /**
    * Prepare to create a stream to carry [request]. This prefers to use the existing connection if
    * it exists.
+   * 准备创建一个流来搭载 request，如果已经存在连接就优先使用它
    */
   fun prepareToConnect(request: Request) {
     if (this.request != null) {
+      // 主机相同、端口相同、协议相同，即表明连接可以复用
+      // 当前路由可以复用或者连接池中还存在未尝试的连接
       if (this.request!!.url().canReuseConnectionFor(request.url()) && exchangeFinder!!.hasRouteToTry()) {
         return // Already ready.
       }
@@ -263,6 +266,9 @@ class Transmitter(
    *
    * If the transmitter was canceled or timed out, this will wrap [e] in an exception that provides
    * that additional context. Otherwise [e] is returned as-is.
+   *
+   * 如果不再需要连接，则释放连接。 在每次交换完成之后以及在呼叫信号之后调用，不再需要交换。
+   * 如果发送器被取消或超时，则会将包装在提供额外上下文的异常中。 否则按原样返回
    *
    * @param force true to release the connection even if more exchanges are expected for the call.
    */

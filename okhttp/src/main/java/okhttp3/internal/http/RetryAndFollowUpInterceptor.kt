@@ -15,29 +15,18 @@
  */
 package okhttp3.internal.http
 
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.Route
+import okhttp3.*
+import okhttp3.internal.canReuseConnectionFor
 import okhttp3.internal.closeQuietly
 import okhttp3.internal.connection.RouteException
 import okhttp3.internal.connection.Transmitter
 import okhttp3.internal.http.StatusLine.Companion.HTTP_PERM_REDIRECT
 import okhttp3.internal.http.StatusLine.Companion.HTTP_TEMP_REDIRECT
 import okhttp3.internal.http2.ConnectionShutdownException
-import okhttp3.internal.canReuseConnectionFor
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InterruptedIOException
-import java.net.HttpURLConnection.HTTP_CLIENT_TIMEOUT
-import java.net.HttpURLConnection.HTTP_MOVED_PERM
-import java.net.HttpURLConnection.HTTP_MOVED_TEMP
-import java.net.HttpURLConnection.HTTP_MULT_CHOICE
-import java.net.HttpURLConnection.HTTP_PROXY_AUTH
-import java.net.HttpURLConnection.HTTP_SEE_OTHER
-import java.net.HttpURLConnection.HTTP_UNAUTHORIZED
-import java.net.HttpURLConnection.HTTP_UNAVAILABLE
+import java.net.HttpURLConnection.*
 import java.net.ProtocolException
 import java.net.Proxy
 import java.net.SocketTimeoutException
@@ -48,6 +37,7 @@ import javax.net.ssl.SSLPeerUnverifiedException
 /**
  * This interceptor recovers from failures and follows redirects as necessary. It may throw an
  * [IOException] if the call was canceled.
+ * 失败重试、必要时重定向
  */
 class RetryAndFollowUpInterceptor(private val client: OkHttpClient) : Interceptor {
 
@@ -59,6 +49,7 @@ class RetryAndFollowUpInterceptor(private val client: OkHttpClient) : Intercepto
     var followUpCount = 0
     var priorResponse: Response? = null
     while (true) {
+      // 准备用于连接的request
       transmitter.prepareToConnect(request)
 
       if (transmitter.isCanceled) {
@@ -68,16 +59,19 @@ class RetryAndFollowUpInterceptor(private val client: OkHttpClient) : Intercepto
       var response: Response
       var success = false
       try {
+        // 链式调用拦截器的intercept，返回最终的response
         response = realChain.proceed(request, transmitter, null)
         success = true
       } catch (e: RouteException) {
         // The attempt to connect via a route failed. The request will not have been sent.
+        // 尝试通过路由连接失败。 请求将不会被发送。
         if (!recover(e.lastConnectException, transmitter, false, request)) {
           throw e.firstConnectException
         }
         continue
       } catch (e: IOException) {
         // An attempt to communicate with a server failed. The request may have been sent.
+        // 尝试与服务器通信失败。 请求可能已发送。
         val requestSendStarted = e !is ConnectionShutdownException
         if (!recover(e, transmitter, requestSendStarted, request)) throw e
         continue
@@ -90,6 +84,7 @@ class RetryAndFollowUpInterceptor(private val client: OkHttpClient) : Intercepto
 
       // Attach the prior response if it exists. Such responses never have a body.
       if (priorResponse != null) {
+        // Response中priorResponse为val，不可直接赋值
         response = response.newBuilder()
             .priorResponse(priorResponse.newBuilder()
                 .body(null)
@@ -102,6 +97,10 @@ class RetryAndFollowUpInterceptor(private val client: OkHttpClient) : Intercepto
       val followUp = followUpRequest(response, route)
 
       if (followUp == null) {
+        // 如果请求正文在响应主体请求之前无需完成
+        // 用于 WebSocket 和双工调用
+        // http1.1 为半双工，复用socket，串行传输
+        // http2.0 为全双工，复用socket，并行传输
         if (exchange != null && exchange.isDuplex) {
           transmitter.timeoutEarlyExit()
         }
@@ -202,6 +201,7 @@ class RetryAndFollowUpInterceptor(private val client: OkHttpClient) : Intercepto
 
     val method = userResponse.request().method()
     when (responseCode) {
+      // 407 需要身份验证
       HTTP_PROXY_AUTH -> {
         val selectedProxy = route!!.proxy()
         if (selectedProxy.type() != Proxy.Type.HTTP) {

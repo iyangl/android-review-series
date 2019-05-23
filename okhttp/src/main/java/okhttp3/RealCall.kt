@@ -29,7 +29,7 @@ import okhttp3.internal.threadName
 import okio.Timeout
 import java.io.IOException
 import java.io.InterruptedIOException
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicInteger
@@ -168,13 +168,18 @@ internal class RealCall private constructor(
     // Build a full stack of interceptors.
     val interceptors = ArrayList<Interceptor>()
     interceptors.addAll(client.interceptors())
+    // 失败重试与重定向
     interceptors.add(RetryAndFollowUpInterceptor(client))
+    // 负责把用户构造的请求转换为发送到服务器的请求，把服务器返回的响应转换为用户友好的响应
     interceptors.add(BridgeInterceptor(client.cookieJar()))
+    // 读取缓存直接返回、更新缓存
     interceptors.add(CacheInterceptor(client.internalCache()))
+    // 与服务器建立连接
     interceptors.add(ConnectInterceptor(client))
     if (!forWebSocket) {
       interceptors.addAll(client.networkInterceptors())
     }
+    // 向服务器发送请求，从服务器读取响应数据
     interceptors.add(CallServerInterceptor(forWebSocket))
 
     val chain = RealInterceptorChain(interceptors, transmitter, null, 0,
