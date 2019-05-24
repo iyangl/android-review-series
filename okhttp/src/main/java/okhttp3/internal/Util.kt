@@ -17,11 +17,7 @@
 
 package okhttp3.internal
 
-import okhttp3.EventListener
-import okhttp3.Headers
-import okhttp3.HttpUrl
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
+import okhttp3.*
 import okhttp3.internal.http2.Header
 import okhttp3.internal.platform.Platform
 import okio.BufferedSource

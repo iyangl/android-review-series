@@ -2,6 +2,7 @@ package com.lemayn.review
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.junit.Test
@@ -43,5 +44,25 @@ class MainActivity : AppCompatActivity() {
                 println(e.message)
             }
         })
+    }
+
+    @Test
+    fun test3() {
+        println(hostHeader(Request.Builder().url("http://192.168.0.1:8080").build().url(), true))
+    }
+
+    fun hostHeader(url: HttpUrl, includeDefaultPort: Boolean): String {
+        val host = if (":" in url.host()) {
+            "[${url.host()}]"
+        } else {
+            url.host()
+        }
+        println("${":" in url.host()}------")
+        println("$host------")
+        return if (includeDefaultPort || url.port() != HttpUrl.defaultPort(url.scheme())) {
+            "$host:${url.port()}"
+        } else {
+            host
+        }
     }
 }

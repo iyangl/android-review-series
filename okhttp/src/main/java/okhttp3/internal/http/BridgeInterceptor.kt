@@ -31,6 +31,9 @@ import okio.buffer
  * Bridges from application code to network code. First it builds a network request from a user
  * request. Then it proceeds to call the network. Finally it builds a user response from the network
  * response.
+ * 1、根据用户请求构建网络请求
+ * 2、呼叫网络
+ * 3、根据网络应答构建网络响应
  */
 class BridgeInterceptor(private val cookieJar: CookieJar) : Interceptor {
 
@@ -43,6 +46,7 @@ class BridgeInterceptor(private val cookieJar: CookieJar) : Interceptor {
     if (body != null) {
       val contentType = body.contentType()
       if (contentType != null) {
+        // 请求内容类型
         requestBuilder.header("Content-Type", contentType.toString())
       }
 
@@ -51,12 +55,14 @@ class BridgeInterceptor(private val cookieJar: CookieJar) : Interceptor {
         requestBuilder.header("Content-Length", contentLength.toString())
         requestBuilder.removeHeader("Transfer-Encoding")
       } else {
+        // 分块编码，最后一块长度必须为0
         requestBuilder.header("Transfer-Encoding", "chunked")
         requestBuilder.removeHeader("Content-Length")
       }
     }
 
     if (userRequest.header("Host") == null) {
+      // 域名
       requestBuilder.header("Host", hostHeader(userRequest.url(), false))
     }
 
@@ -68,12 +74,14 @@ class BridgeInterceptor(private val cookieJar: CookieJar) : Interceptor {
     // the transfer stream.
     var transparentGzip = false
     if (userRequest.header("Accept-Encoding") == null && userRequest.header("Range") == null) {
+      // 压缩传输流
       transparentGzip = true
       requestBuilder.header("Accept-Encoding", "gzip")
     }
 
     val cookies = cookieJar.loadForRequest(userRequest.url())
     if (cookies.isNotEmpty()) {
+      // 拼接 cookie  key=value;key=value
       requestBuilder.header("Cookie", cookieHeader(cookies))
     }
 
@@ -81,18 +89,23 @@ class BridgeInterceptor(private val cookieJar: CookieJar) : Interceptor {
       requestBuilder.header("User-Agent", userAgent)
     }
 
+    // 链式调用拦截器的 intercept，返回最终的 response
+    // 为啥这个不用 try-catch？
     val networkResponse = chain.proceed(requestBuilder.build())
 
+    // 缓存新的cookie
     cookieJar.receiveHeaders(userRequest.url(), networkResponse.headers())
 
     val responseBuilder = networkResponse.newBuilder()
         .request(userRequest)
 
+    // gzip压缩且请求有正文
     if (transparentGzip &&
         "gzip".equals(networkResponse.header("Content-Encoding"), ignoreCase = true) &&
         networkResponse.promisesBody()) {
       val responseBody = networkResponse.body()
       if (responseBody != null) {
+        // okio 处理数据源  TODO 解压？
         val gzipSource = GzipSource(responseBody.source())
         val strippedHeaders = networkResponse.headers().newBuilder()
             .removeAll("Content-Encoding")
