@@ -22,7 +22,10 @@ import okio.buffer
 import java.io.IOException
 import java.net.ProtocolException
 
-/** This is the last interceptor in the chain. It makes a network call to the server.  */
+/**
+ *  This is the last interceptor in the chain. It makes a network call to the server.
+ *  链中最后一个拦截器。向服务器进行网络调用。
+ */
 class CallServerInterceptor(private val forWebSocket: Boolean) : Interceptor {
 
   @Throws(IOException::class)
@@ -33,16 +36,21 @@ class CallServerInterceptor(private val forWebSocket: Boolean) : Interceptor {
     val requestBody = request.body()
     val sentRequestMillis = System.currentTimeMillis()
 
+    // codec 写入请求头
     exchange.writeRequestHeaders(request)
 
     var responseHeadersStarted = false
     var responseBuilder: Response.Builder? = null
+    // 非 GET、HEAD 请求，codec 写入请求体
     if (HttpMethod.permitsRequestBody(request.method()) && requestBody != null) {
       // If there's a "Expect: 100-continue" header on the request, wait for a "HTTP/1.1 100
       // Continue" response before transmitting the request body. If we don't get that, return
       // what we did get (such as a 4xx response) without ever transmitting the request body.
+      // 请求头中含有 100-continue，需要等待 HTTP / 1.1 100 Continue 响应
       if ("100-continue".equals(request.header("Expect"), ignoreCase = true)) {
+        // 刷新请求到底层socket
         exchange.flushRequest()
+        // 等待请求头响应
         responseHeadersStarted = true
         exchange.responseHeadersStart()
         responseBuilder = exchange.readResponseHeaders(true)
@@ -50,9 +58,11 @@ class CallServerInterceptor(private val forWebSocket: Boolean) : Interceptor {
       if (responseBuilder == null) {
         if (requestBody.isDuplex()) {
           // Prepare a duplex body so that the application can send a request body later.
+          // 双工请求先刷新请求？
           exchange.flushRequest()
           val bufferedRequestBody = exchange.createRequestBody(request, true).buffer()
           requestBody.writeTo(bufferedRequestBody)
+          // 双工为什么不在写入完成后，关闭流
         } else {
           // Write the request body if the "Expect: 100-continue" expectation was met.
           val bufferedRequestBody = exchange.createRequestBody(request, false).buffer()
@@ -81,6 +91,7 @@ class CallServerInterceptor(private val forWebSocket: Boolean) : Interceptor {
     if (responseBuilder == null) {
       responseBuilder = exchange.readResponseHeaders(false)!!
     }
+    // 请求
     var response = responseBuilder
         .request(request)
         .handshake(exchange.connection()!!.handshake())
@@ -88,6 +99,7 @@ class CallServerInterceptor(private val forWebSocket: Boolean) : Interceptor {
         .receivedResponseAtMillis(System.currentTimeMillis())
         .build()
     var code = response.code()
+    // 收到服务器发送的 100-continue 应答，重新进行真正的请求
     if (code == 100) {
       // server sent a 100-continue even though we did not request one.
       // try again to read the actual response
@@ -104,6 +116,7 @@ class CallServerInterceptor(private val forWebSocket: Boolean) : Interceptor {
 
     response = if (forWebSocket && code == 101) {
       // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
+      // WebSocket 成功建立会返回101，暂不关注
       response.newBuilder()
           .body(EMPTY_RESPONSE)
           .build()

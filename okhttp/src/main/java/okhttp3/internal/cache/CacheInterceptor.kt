@@ -42,10 +42,12 @@ class CacheInterceptor(internal val cache: InternalCache?) : Interceptor {
 
   @Throws(IOException::class)
   override fun intercept(chain: Interceptor.Chain): Response {
+    // 缓存中读response
     val cacheCandidate = cache?.get(chain.request())
 
     val now = System.currentTimeMillis()
 
+    // TODO 策略工厂是如何判断 networkResponse 和 cacheResponse 是否可用
     val strategy = CacheStrategy.Factory(now, chain.request(), cacheCandidate).compute()
     val networkRequest = strategy.networkRequest
     val cacheResponse = strategy.cacheResponse
@@ -77,6 +79,7 @@ class CacheInterceptor(internal val cache: InternalCache?) : Interceptor {
           .build()
     }
 
+    // 开始真正的网络请求
     var networkResponse: Response? = null
     try {
       networkResponse = chain.proceed(networkRequest)
@@ -89,6 +92,7 @@ class CacheInterceptor(internal val cache: InternalCache?) : Interceptor {
 
     // If we have a cache response too, then we're doing a conditional get.
     if (cacheResponse != null) {
+      // 304 使用cacheResponse
       if (networkResponse?.code() == HTTP_NOT_MODIFIED) {
         val response = cacheResponse.newBuilder()
             .headers(combine(cacheResponse.headers(), networkResponse.headers()))
@@ -103,6 +107,7 @@ class CacheInterceptor(internal val cache: InternalCache?) : Interceptor {
         // Update the cache after combining headers but before stripping the
         // Content-Encoding header (as performed by initContentStream()).
         cache!!.trackConditionalCacheHit()
+        // 更新缓存
         cache.update(cacheResponse, response)
         return response
       } else {

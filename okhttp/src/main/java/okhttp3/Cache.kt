@@ -214,6 +214,7 @@ class Cache internal constructor(
   internal fun put(response: Response): CacheRequest? {
     val requestMethod = response.request().method()
 
+    // POST、PUT、DELETE 等请求方式，缓存无效，清除缓存
     if (HttpMethod.invalidatesCache(response.request().method())) {
       try {
         remove(response.request())
@@ -223,12 +224,14 @@ class Cache internal constructor(
       return null
     }
 
+    // 不缓存非 GET 请求
     if (requestMethod != "GET") {
       // Don't cache non-GET responses. We're technically allowed to cache HEAD requests and some
       // POST requests, but the complexity of doing so is high and the benefit is low.
       return null
     }
 
+    // Vary header包含 * 不缓存
     if (response.hasVaryAll()) {
       return null
     }
