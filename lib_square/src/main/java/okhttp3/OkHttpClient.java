@@ -17,8 +17,6 @@ package okhttp3;
 
 import android.support.annotation.Nullable;
 
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
-
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.Socket;
