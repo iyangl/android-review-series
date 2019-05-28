@@ -63,6 +63,15 @@ final class Utils {
     return methodError(method, message + " (parameter #" + (p + 1) + ")", args);
   }
 
+  /**
+   * 煮个栗子：
+   * <p>
+   * List<ArrayList> a1;//返回ArrayList，Class类型
+   * List<ArrayList<String>> a2;//返回ArrayList<String>，ParameterizedType类型
+   * List<T> a3;//返回T，TypeVariable类型
+   * List<? extends Number> a4; //返回? extends Number，WildcardType类型
+   * List<ArrayList<String>[]> a5;//返回ArrayList<String>[]，GenericArrayType 类型
+   */
   static Class<?> getRawType(Type type) {
     checkNotNull(type, "type == null");
 
@@ -93,7 +102,7 @@ final class Utils {
     }
 
     throw new IllegalArgumentException("Expected a Class, ParameterizedType, or "
-          + "GenericArrayType, but <" + type + "> is of type " + type.getClass().getName());
+            + "GenericArrayType, but <" + type + "> is of type " + type.getClass().getName());
   }
 
   /** Returns true if {@code a} and {@code b} are equal. */

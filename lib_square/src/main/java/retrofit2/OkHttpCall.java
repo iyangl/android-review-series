@@ -15,11 +15,10 @@
  */
 package retrofit2;
 
+import android.support.annotation.GuardedBy;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
-
-import javax.annotation.concurrent.GuardedBy;
 
 import okhttp3.MediaType;
 import okhttp3.Request;

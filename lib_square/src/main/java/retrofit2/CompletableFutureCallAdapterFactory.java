@@ -17,8 +17,6 @@ package retrofit2;
 
 import android.support.annotation.Nullable;
 
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

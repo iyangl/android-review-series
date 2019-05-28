@@ -169,6 +169,7 @@ public final class Retrofit {
     synchronized (serviceMethodCache) {
       result = serviceMethodCache.get(method);
       if (result == null) {
+        // 解析注解
         result = ServiceMethod.parseAnnotations(this, method);
         serviceMethodCache.put(method, result);
       }
@@ -371,6 +372,7 @@ public final class Retrofit {
     }
 
     // Nothing matched. Resort to default converter which just calls toString().
+    // 返回默认 convert。未检查类型直接强转，注释中加入 noinspection unchecked 可以消除警告
     //noinspection unchecked
     return (Converter<T, String>) BuiltInConverters.ToStringConverter.INSTANCE;
   }

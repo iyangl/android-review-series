@@ -34,7 +34,7 @@ abstract class ServiceMethod<T> {
     if (returnType == void.class) {
       throw methodError(method, "Service methods cannot return void.");
     }
-
+    // 将接口方法调整为 HTTP 调用
     return HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);
   }
 

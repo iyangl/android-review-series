@@ -16,7 +16,6 @@
 package retrofit2;
 
 import android.support.annotation.Nullable;
-import com.sun.jndi.toolkit.ctx.Continuation;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -171,6 +170,7 @@ final class RequestFactory {
     }
 
     RequestFactory build() {
+      // 遍历方法的注解
       for (Annotation annotation : methodAnnotations) {
         parseMethodAnnotation(annotation);
       }
@@ -179,6 +179,7 @@ final class RequestFactory {
         throw methodError(method, "HTTP method annotation is required (e.g., @GET, @POST, etc.).");
       }
 
+      // FormUrlEncoded 和 Multipart 必须包含请求体
       if (!hasBody) {
         if (isMultipart) {
           throw methodError(method,
@@ -213,6 +214,9 @@ final class RequestFactory {
       return new RequestFactory(this);
     }
 
+    /**
+     * 分类型处理注解
+     */
     private void parseMethodAnnotation(Annotation annotation) {
       if (annotation instanceof DELETE) {
         parseHttpMethodAndPath("DELETE", ((DELETE) annotation).value(), false);
@@ -236,7 +240,9 @@ final class RequestFactory {
         if (headersToParse.length == 0) {
           throw methodError(method, "@Headers annotation is empty.");
         }
+        // 解析请求头
         headers = parseHeaders(headersToParse);
+        // Multipart FormUrlEncoded 不能同时设置
       } else if (annotation instanceof Multipart) {
         if (isFormEncoded) {
           throw methodError(method, "Only one encoding annotation is allowed.");
@@ -258,15 +264,18 @@ final class RequestFactory {
       this.httpMethod = httpMethod;
       this.hasBody = hasBody;
 
+      // 注解内没有参数
       if (value.isEmpty()) {
         return;
       }
 
       // Get the relative URL path and existing query string, if present.
       int question = value.indexOf('?');
+      // TODO: 2019/5/28 不能在链接后拼参数，使用@Query替换 我猜的
       if (question != -1 && question < value.length() - 1) {
         // Ensure the query string does not have any named parameters.
         String queryParams = value.substring(question + 1);
+        // 大写字母，小写字母，数字，下划线和连字符。
         Matcher queryParamMatcher = PARAM_URL_REGEX.matcher(queryParams);
         if (queryParamMatcher.find()) {
           throw methodError(method, "URL query string \"%s\" must not have replace block. "
@@ -286,6 +295,7 @@ final class RequestFactory {
           throw methodError(method,
               "@Headers value must be in the form \"Name: Value\". Found: \"%s\"", header);
         }
+        // 循环添加header
         String headerName = header.substring(0, colon);
         String headerValue = header.substring(colon + 1).trim();
         if ("Content-Type".equalsIgnoreCase(headerName)) {
@@ -306,6 +316,7 @@ final class RequestFactory {
       ParameterHandler<?> result = null;
       if (annotations != null) {
         for (Annotation annotation : annotations) {
+          // 根据注解解析请求方法
           ParameterHandler<?> annotationAction =
               parseParameterAnnotation(p, parameterType, annotations, annotation);
 
@@ -364,6 +375,7 @@ final class RequestFactory {
 
         gotUrl = true;
 
+        // @Url 只接受以下参数类型
         if (type == HttpUrl.class
             || type == String.class
             || type == URI.class
@@ -396,9 +408,12 @@ final class RequestFactory {
 
         Path path = (Path) annotation;
         String name = path.value();
+        // 正则校验 @Path 的值是否在 url 内定义
         validatePathName(p, name);
 
+        // 从 converterFactories 中找 stringConvert，找不到就用默认的 BuiltInConverters.ToStringConverter.INSTANCE
         Converter<?, String> converter = retrofit.stringConverter(type, annotations);
+        // convert 的作用是将 T 转为 String
         return new ParameterHandler.Path<>(method, p, name, converter, path.encoded());
 
       } else if (annotation instanceof Query) {
@@ -407,8 +422,11 @@ final class RequestFactory {
         String name = query.value();
         boolean encoded = query.encoded();
 
+        // 获取类型的 Class 对象
         Class<?> rawParameterType = Utils.getRawType(type);
         gotQuery = true;
+        // rawParameterType 是不是 Iterable 的(子类)对象
+        // 泛型内为一个集合
         if (Iterable.class.isAssignableFrom(rawParameterType)) {
           if (!(type instanceof ParameterizedType)) {
             throw parameterError(method, p, rawParameterType.getSimpleName()
@@ -418,6 +436,7 @@ final class RequestFactory {
           }
           ParameterizedType parameterizedType = (ParameterizedType) type;
           Type iterableType = Utils.getParameterUpperBound(0, parameterizedType);
+          // 为啥又是 stringConvert，因为这是处理入参... 人晕了
           Converter<?, String> converter =
               retrofit.stringConverter(iterableType, annotations);
           return new ParameterHandler.Query<>(name, converter, encoded).iterable();

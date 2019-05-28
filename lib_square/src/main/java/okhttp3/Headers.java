@@ -19,8 +19,6 @@ package okhttp3;
 
 import android.support.annotation.Nullable;
 
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;

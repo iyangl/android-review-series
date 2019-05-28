@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import kotlin.coroutines.Continuation;
 import okhttp3.ResponseBody;
 
 import static retrofit2.Utils.getRawType;
