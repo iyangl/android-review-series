@@ -15,11 +15,7 @@
  */
 package okhttp3.internal.http
 
-import okhttp3.Call
-import okhttp3.Connection
-import okhttp3.Interceptor
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import okhttp3.internal.checkDuration
 import okhttp3.internal.connection.Exchange
 import okhttp3.internal.connection.Transmitter
@@ -103,11 +99,13 @@ class RealInterceptorChain(
       "network interceptor ${interceptors[index - 1]} must call proceed() exactly once"
     }
 
+    // 更新 index，调用当前下标拦截器的 intercept
     // Call the next interceptor in the chain.
     val next = RealInterceptorChain(interceptors, transmitter, exchange,
         index + 1, request, call, connectTimeout, readTimeout, writeTimeout)
     val interceptor = interceptors[index]
 
+    // 这里将更新了下标 index 的 chain 传入拦截器的 intercept，会继续调用 RealInterceptorChain#proceed
     @Suppress("USELESS_ELVIS")
     val response = interceptor.intercept(next) ?: throw NullPointerException(
         "interceptor $interceptor returned null")

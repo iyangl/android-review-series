@@ -143,7 +143,7 @@ open class OkHttpClient internal constructor(
      */
     private val eventListenerFactory: EventListener.Factory = builder.eventListenerFactory
     /**
-     * 代理选择
+     * 代理选择器
      */
     private val proxySelector: ProxySelector = builder.proxySelector
     /**
@@ -207,7 +207,7 @@ open class OkHttpClient internal constructor(
      */
     private val connectTimeout: Int = builder.connectTimeout
     /**
-     * 读取超时实际那
+     * 读取超时时间
      */
     private val readTimeout: Int = builder.readTimeout
     /**
@@ -215,7 +215,7 @@ open class OkHttpClient internal constructor(
      */
     private val writeTimeout: Int = builder.writeTimeout
     /**
-     * ping超时时间
+     * ping时间间隔
      */
     private val pingInterval: Int = builder.pingInterval
     /**
@@ -381,34 +381,34 @@ open class OkHttpClient internal constructor(
         internal var pingInterval: Int = 0
 
         internal constructor(okHttpClient: OkHttpClient) : this() {
-            this.dispatcher = okHttpClient.dispatcher
-            this.proxy = okHttpClient.proxy
-            this.protocols = okHttpClient.protocols
-            this.connectionSpecs = okHttpClient.connectionSpecs
-            this.interceptors += okHttpClient.interceptors
-            this.networkInterceptors += okHttpClient.networkInterceptors
-            this.eventListenerFactory = okHttpClient.eventListenerFactory
-            this.proxySelector = okHttpClient.proxySelector
+            this.dispatcher = okHttpClient.dispatcher // 线程策略调度器
+            this.proxy = okHttpClient.proxy // 代理
+            this.protocols = okHttpClient.protocols // 协议
+            this.connectionSpecs = okHttpClient.connectionSpecs // 传输层版本和连接协议
+            this.interceptors += okHttpClient.interceptors // 拦截器
+            this.networkInterceptors += okHttpClient.networkInterceptors // 网络拦截器
+            this.eventListenerFactory = okHttpClient.eventListenerFactory // 事件监听工厂
+            this.proxySelector = okHttpClient.proxySelector // 代理选择器
             this.cookieJar = okHttpClient.cookieJar
             this.internalCache = okHttpClient.internalCache
             this.cache = okHttpClient.cache
             this.socketFactory = okHttpClient.socketFactory
             this.sslSocketFactory = okHttpClient.sslSocketFactory
             this.certificateChainCleaner = okHttpClient.certificateChainCleaner
-            this.hostnameVerifier = okHttpClient.hostnameVerifier
+            this.hostnameVerifier = okHttpClient.hostnameVerifier // 主机验证器
             this.certificatePinner = okHttpClient.certificatePinner
             this.proxyAuthenticator = okHttpClient.proxyAuthenticator
             this.authenticator = okHttpClient.authenticator
             this.connectionPool = okHttpClient.connectionPool
             this.dns = okHttpClient.dns
-            this.followSslRedirects = okHttpClient.followSslRedirects
-            this.followRedirects = okHttpClient.followRedirects
+            this.followSslRedirects = okHttpClient.followSslRedirects // 安全套接层重定向
+            this.followRedirects = okHttpClient.followRedirects // 本地重定向
             this.retryOnConnectionFailure = okHttpClient.retryOnConnectionFailure
-            this.callTimeout = okHttpClient.callTimeout
-            this.connectTimeout = okHttpClient.connectTimeout
-            this.readTimeout = okHttpClient.readTimeout
-            this.writeTimeout = okHttpClient.writeTimeout
-            this.pingInterval = okHttpClient.pingInterval
+            this.callTimeout = okHttpClient.callTimeout // 请求超时时间
+            this.connectTimeout = okHttpClient.connectTimeout // 连接超时时间
+            this.readTimeout = okHttpClient.readTimeout // 读取超时时间
+            this.writeTimeout = okHttpClient.writeTimeout // 写入超时时间
+            this.pingInterval = okHttpClient.pingInterval // ping时间间隔
         }
 
         /**

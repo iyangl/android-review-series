@@ -2,6 +2,7 @@ package com.lemayn.review
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -64,5 +65,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             host
         }
+    }
+
+    @Test
+    fun test4() {
+        println(Headers.Builder().build().size().toString())
+        val a = null
+        checkNotNull(a)
     }
 }

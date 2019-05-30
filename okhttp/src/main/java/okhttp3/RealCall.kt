@@ -76,6 +76,8 @@ internal class RealCall private constructor(
       executed = true
     }
     transmitter.callStart()
+    // 通过调度器的 enqueue 实现异步操作
+    // AsyncCall 实现了 Runnable，用来被调度器中的 ExecutorService 进行异步调用
     client.dispatcher().enqueue(AsyncCall(responseCallback))
   }
 
@@ -115,6 +117,7 @@ internal class RealCall private constructor(
       assert(!Thread.holdsLock(client.dispatcher()))
       var success = false
       try {
+        // 线程池执行 runnable
         executorService.execute(this)
         success = true
       } catch (e: RejectedExecutionException) {
@@ -124,6 +127,7 @@ internal class RealCall private constructor(
         responseCallback.onFailure(this@RealCall, ioException)
       } finally {
         if (!success) {
+          // 请求执行失败后不应再被执行，将请求移出异步请求队列
           client.dispatcher().finished(this) // This call is no longer running!
         }
       }
@@ -134,17 +138,21 @@ internal class RealCall private constructor(
         var signalledCallback = false
         transmitter.timeoutEnter()
         try {
+          // 调用 {@link #getResponseWithInterceptorChain()} 执行请求，获取 response
           val response = getResponseWithInterceptorChain()
           signalledCallback = true
+          // 请求成功回调
           responseCallback.onResponse(this@RealCall, response)
         } catch (e: IOException) {
           if (signalledCallback) {
             // Do not signal the callback twice!
             Platform.get().log(INFO, "Callback failure for ${toLoggableString()}", e)
           } else {
+            // 请求失败回调
             responseCallback.onFailure(this@RealCall, e)
           }
         } finally {
+          // 请求结束，将请求移出异步请求队列
           client.dispatcher().finished(this)
         }
       }
@@ -182,12 +190,14 @@ internal class RealCall private constructor(
     // 向服务器发送请求，从服务器读取响应数据
     interceptors.add(CallServerInterceptor(forWebSocket))
 
+    // 拦截器链
     val chain = RealInterceptorChain(interceptors, transmitter, null, 0,
         originalRequest, this, client.connectTimeoutMillis(),
         client.readTimeoutMillis(), client.writeTimeoutMillis())
 
     var calledNoMoreExchanges = false
     try {
+      // 拦截器链开始执行
       val response = chain.proceed(originalRequest)
       if (transmitter.isCanceled) {
         response.closeQuietly()
@@ -205,6 +215,9 @@ internal class RealCall private constructor(
   }
 
   companion object {
+    /**
+     * @param forWebSocket 不考虑 WebSocket，默认为 false
+     */
     fun newRealCall(
       client: OkHttpClient,
       originalRequest: Request,

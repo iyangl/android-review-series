@@ -17,10 +17,7 @@ package okhttp3
 
 import okhttp3.RealCall.AsyncCall
 import okhttp3.internal.threadFactory
-import java.util.ArrayDeque
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Deque
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadPoolExecutor
@@ -77,12 +74,15 @@ class Dispatcher constructor() {
   private var executorService: ExecutorService? = null
 
   /** Ready async calls in the order they'll be run.  */
+  // 待执行的异步请求队列
   private val readyAsyncCalls = ArrayDeque<AsyncCall>()
 
   /** Running asynchronous calls. Includes canceled calls that haven't finished yet.  */
+  // 异步运行队列，包括已取消未结束的请求
   private val runningAsyncCalls = ArrayDeque<AsyncCall>()
 
   /** Running synchronous calls. Includes canceled calls that haven't finished yet.  */
+  // 同步运行队列，包括已取消未结束的请求
   private val runningSyncCalls = ArrayDeque<RealCall>()
 
   constructor(executorService: ExecutorService) : this() {
@@ -119,6 +119,7 @@ class Dispatcher constructor() {
 
   internal fun enqueue(call: AsyncCall) {
     synchronized(this) {
+      // 添加异步请求到待执行队列
       readyAsyncCalls.add(call)
 
       // Mutate the AsyncCall so that it shares the AtomicInteger of an existing running call to
@@ -128,6 +129,7 @@ class Dispatcher constructor() {
         if (existingCall != null) call.reuseCallsPerHostFrom(existingCall)
       }
     }
+    // 将符合条件的待执行异步请求提升到运行中请求队列中，并开始执行它们
     promoteAndExecute()
   }
 
@@ -166,7 +168,7 @@ class Dispatcher constructor() {
    */
   private fun promoteAndExecute(): Boolean {
     assert(!Thread.holdsLock(this))
-
+    // 存放符合条件的可执行请求
     val executableCalls = ArrayList<AsyncCall>()
     val isRunning: Boolean
     synchronized(this) {
@@ -174,11 +176,15 @@ class Dispatcher constructor() {
       while (i.hasNext()) {
         val asyncCall = i.next()
 
+        // 超出可同时执行的最大请求数
         if (runningAsyncCalls.size >= this.maxRequests) break // Max capacity.
+        // 超出对同一主机可同时执行的最大请求数，continue
         if (asyncCall.callsPerHost().get() >= this.maxRequestsPerHost) continue // Host max capacity.
-
+        // 可以被执行，移除待执行队列
         i.remove()
+        // 同一主机正在执行的请求数量自增，{@link AtomicInteger} 类型
         asyncCall.callsPerHost().incrementAndGet()
+        // 加入可执行列表
         executableCalls.add(asyncCall)
         runningAsyncCalls.add(asyncCall)
       }
@@ -187,6 +193,7 @@ class Dispatcher constructor() {
 
     for (i in 0 until executableCalls.size) {
       val asyncCall = executableCalls[i]
+      // 轮询执行请求
       asyncCall.executeOn(executorService())
     }
 
@@ -217,7 +224,7 @@ class Dispatcher constructor() {
     }
 
     val isRunning = promoteAndExecute()
-
+    // 未发现源码中有为 idleCallback 赋值的地方，暂认为下面代码不会执行
     if (!isRunning && idleCallback != null) {
       idleCallback.run()
     }
