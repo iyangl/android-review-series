@@ -1,8 +1,5 @@
 package com.bumptech.glide;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.util.Pools.Pool;
 import com.bumptech.glide.load.Encoder;
 import com.bumptech.glide.load.ImageHeaderParser;
 import com.bumptech.glide.load.Options;
@@ -25,14 +22,20 @@ import com.bumptech.glide.provider.ModelToResourceClassCache;
 import com.bumptech.glide.provider.ResourceDecoderRegistry;
 import com.bumptech.glide.provider.ResourceEncoderRegistry;
 import com.bumptech.glide.util.pool.FactoryPools;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.util.Pools.Pool;
+
 /**
  * Manages component registration to extend or replace Glide's default loading, decoding, and
  * encoding logic.
+ * 管理组件注册以扩展或替换 Glide 的默认加载，解码，编码逻辑
  */
 // Public API.
 @SuppressWarnings({"WeakerAccess", "unused"})

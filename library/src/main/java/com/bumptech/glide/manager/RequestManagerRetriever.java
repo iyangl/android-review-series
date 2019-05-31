@@ -12,26 +12,30 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.collection.ArrayMap;
 import android.util.Log;
 import android.view.View;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.util.Preconditions;
 import com.bumptech.glide.util.Util;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.collection.ArrayMap;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 /**
  * A collection of static methods for creating new {@link com.bumptech.glide.RequestManager}s or
  * retrieving existing ones from activities and fragment.
+ * 一组静态方法，用于创建新的 RequestManager 或从 activities 和 fragment 检索已存在的 RequestManager
  */
 public class RequestManagerRetriever implements Handler.Callback {
   @VisibleForTesting static final String FRAGMENT_TAG = "com.bumptech.glide.manager";
@@ -73,6 +77,10 @@ public class RequestManagerRetriever implements Handler.Callback {
     handler = new Handler(Looper.getMainLooper(), this /* Callback */);
   }
 
+  /**
+   * 传入的是 {@link Context#getApplicationContext()} 或
+   * 运行在后台线程
+   */
   @NonNull
   private RequestManager getApplicationManager(@NonNull Context context) {
     // Either an application context or we're on a background thread.

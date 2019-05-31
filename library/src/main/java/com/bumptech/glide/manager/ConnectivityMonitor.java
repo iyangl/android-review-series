@@ -1,6 +1,9 @@
 package com.bumptech.glide.manager;
 
-/** An interface for monitoring network connectivity events. */
+/**
+ * An interface for monitoring network connectivity events.
+ * 用于监控网络连接事件的接口
+ */
 public interface ConnectivityMonitor extends LifecycleListener {
 
   /** An interface for listening to network connectivity events picked up by the monitor. */

@@ -1,22 +1,13 @@
 package com.bumptech.glide;
 
-import static com.bumptech.glide.request.RequestOptions.decodeTypeOf;
-import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
-import static com.bumptech.glide.request.RequestOptions.skipMemoryCacheOf;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.CheckResult;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RawRes;
 import android.view.View;
+
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -37,10 +28,22 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.util.Synthetic;
 import com.bumptech.glide.util.Util;
+
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import androidx.annotation.CheckResult;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RawRes;
+
+import static com.bumptech.glide.request.RequestOptions.decodeTypeOf;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.skipMemoryCacheOf;
 
 /**
  * A class for managing and starting requests for Glide. Can use activity, fragment and connectivity
@@ -53,6 +56,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @see Glide#with(android.app.Fragment)
  * @see Glide#with(androidx.fragment.app.Fragment)
  * @see Glide#with(Context)
+ *
+ * 用于管理和启动 Glide 请求的类。
+ * 可以使用 Activity，Fragment 和连接生命周期事件来智能地停止，启动和重新启动请求。
+ * 通过实例化一个新对象来检索，或者利用 Activity 和 Fragment 内置生命周期的优势，
+ * 在Fragment 或 Activity 中使用静态 {@link Glide#with(View)#load(Uri)} 方法。
  */
 public class RequestManager implements LifecycleListener, ModelTypes<RequestBuilder<Drawable>> {
   private static final RequestOptions DECODE_TYPE_BITMAP = decodeTypeOf(Bitmap.class).lock();

@@ -14,14 +14,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.MessageQueue.IdleHandler;
 import android.os.ParcelFileDescriptor;
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+
 import com.bumptech.glide.gifdecoder.GifDecoder;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.ImageHeaderParser;
@@ -86,6 +81,7 @@ import com.bumptech.glide.request.target.ImageViewTargetFactory;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.util.Preconditions;
 import com.bumptech.glide.util.Util;
+
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -98,29 +94,74 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 /**
  * A singleton to present a simple static interface for building requests with {@link
  * RequestBuilder} and maintaining an {@link Engine}, {@link BitmapPool}, {@link
  * com.bumptech.glide.load.engine.cache.DiskCache} and {@link MemoryCache}.
+ * 提供一个简单的静态接口，用于使用 RequestBuilder 构建请求并维护 Engine、BitmapPool、DiskCache、MemoryCache
  */
 public class Glide implements ComponentCallbacks2 {
   private static final String DEFAULT_DISK_CACHE_DIR = "image_manager_disk_cache";
   private static final String TAG = "Glide";
+  // 单例
   private static volatile Glide glide;
   private static volatile boolean isInitializing;
 
+  /**
+   * 负责启动加载并管理活动和缓存资源的引擎
+   */
   private final Engine engine;
+  /**
+   * Bitmap 池
+   */
   private final BitmapPool bitmapPool;
+  /**
+   * 缓存管理
+   */
   private final MemoryCache memoryCache;
+  /**
+   * 全局 context
+   */
   private final GlideContext glideContext;
+  /**
+   * 管理注册组件
+   */
   private final Registry registry;
+  /**
+   * 阵列池
+   */
   private final ArrayPool arrayPool;
+  /**
+   * RequestManager 检索器
+   */
   private final RequestManagerRetriever requestManagerRetriever;
+  /**
+   * ConnectivityMonitor 工厂
+   */
   private final ConnectivityMonitorFactory connectivityMonitorFactory;
+  /**
+   * RequestManager 集合
+   */
   private final List<RequestManager> managers = new ArrayList<>();
+  /**
+   * 默认的请求选项配置工厂
+   */
   private final RequestOptionsFactory defaultRequestOptionsFactory;
+  /**
+   * 可使用内存量
+   */
   private MemoryCategory memoryCategory = MemoryCategory.NORMAL;
 
+  /**
+   * 将 Bitmap 预填充到 BitmapPool
+   */
   @GuardedBy("this")
   @Nullable
   private BitmapPreFiller bitmapPreFiller;
@@ -712,6 +753,7 @@ public class Glide implements ComponentCallbacks2 {
    */
   @NonNull
   public static RequestManager with(@NonNull Activity activity) {
+    // 在 Activity 中检索/新建 RequestManager
     return getRetriever(activity).get(activity);
   }
 

@@ -1,10 +1,7 @@
 package com.bumptech.glide.load.engine;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.util.Pools;
 import android.util.Log;
+
 import com.bumptech.glide.GlideContext;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
@@ -22,10 +19,19 @@ import com.bumptech.glide.util.LogTime;
 import com.bumptech.glide.util.Preconditions;
 import com.bumptech.glide.util.Synthetic;
 import com.bumptech.glide.util.pool.FactoryPools;
+
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-/** Responsible for starting loads and managing active and cached resources. */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.util.Pools;
+
+/**
+ * Responsible for starting loads and managing active and cached resources.
+ * 负责启动加载并管理活动和缓存资源
+ */
 public class Engine
     implements EngineJobListener,
         MemoryCache.ResourceRemovedListener,

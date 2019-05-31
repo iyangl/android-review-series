@@ -1,11 +1,15 @@
 package com.bumptech.glide.load.engine.cache;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import com.bumptech.glide.load.Key;
 import com.bumptech.glide.load.engine.Resource;
 
-/** An interface for adding and removing resources from an in memory cache. */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+/**
+ * An interface for adding and removing resources from an in memory cache.
+ * 一个负责在内存缓存中添加和删除资源的接口
+ */
 public interface MemoryCache {
   /** An interface that will be called whenever a bitmap is removed from the cache. */
   interface ResourceRemovedListener {

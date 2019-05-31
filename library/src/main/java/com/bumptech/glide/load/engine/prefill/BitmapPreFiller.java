@@ -3,17 +3,21 @@ package com.bumptech.glide.load.engine.prefill;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.VisibleForTesting;
+
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.engine.cache.MemoryCache;
 import com.bumptech.glide.util.Util;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.VisibleForTesting;
 
 /**
  * A class for pre-filling {@link android.graphics.Bitmap Bitmaps} in a {@link
  * com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool}.
+ * 在 BitmapPool 中预填充 Bitmaps 的类
  */
 public final class BitmapPreFiller {
 

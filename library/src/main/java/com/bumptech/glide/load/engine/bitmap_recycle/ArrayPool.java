@@ -1,6 +1,9 @@
 package com.bumptech.glide.load.engine.bitmap_recycle;
 
-/** Interface for an array pool that pools arrays of different types. */
+/**
+ * Interface for an array pool that pools arrays of different types.
+ * 用于池化不同类型的数组的阵列池的接口
+ */
 public interface ArrayPool {
   /**
    * A standard size to use to increase hit rates when the required size isn't defined. Currently

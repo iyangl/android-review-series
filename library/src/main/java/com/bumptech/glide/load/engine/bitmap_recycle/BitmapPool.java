@@ -3,7 +3,10 @@ package com.bumptech.glide.load.engine.bitmap_recycle;
 import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 
-/** An interface for a pool that allows users to reuse {@link android.graphics.Bitmap} objects. */
+/**
+ * An interface for a pool that allows users to reuse {@link android.graphics.Bitmap} objects.
+ * bitmap 池，用于允许用户重用 Bitmap 对象
+ */
 public interface BitmapPool {
 
   /** Returns the current maximum size of the pool in bytes. */

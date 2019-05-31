@@ -2,11 +2,8 @@ package com.bumptech.glide;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide.RequestOptionsFactory;
 import com.bumptech.glide.load.engine.Engine;
 import com.bumptech.glide.load.engine.bitmap_recycle.ArrayPool;
@@ -14,13 +11,20 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTargetFactory;
 import com.bumptech.glide.request.target.ViewTarget;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 /**
  * Global context for all loads in Glide containing and exposing the various registries and classes
  * required to load resources.
+ * 用于负责所有加载的全局 context
  */
 public class GlideContext extends ContextWrapper {
   @VisibleForTesting
