@@ -91,9 +91,12 @@ public class RequestManagerRetriever implements Handler.Callback {
           // activity. However, in this case since the manager attached to the application will not
           // receive lifecycle events, we must force the manager to start resumed using
           // ApplicationLifecycle.
-
+          // 通常情况下，Fragment 的 pause/resume 事件由我们添加到的 Fragment 或 Activity 来处理，
+          // 这种情况下，我们连接到应用的 manager 不会接收到生命周期事件，我们必须强制使用
+          // ApplicationLifecycle 来 start resumed
           // TODO(b/27524013): Factor out this Glide.get() call.
           Glide glide = Glide.get(context.getApplicationContext());
+          // DEFAULT_FACTORY 的 build() 直接 new RequestManager() 作为返回值
           applicationManager =
               factory.build(
                   glide,

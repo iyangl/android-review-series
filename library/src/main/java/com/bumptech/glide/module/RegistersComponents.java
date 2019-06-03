@@ -1,9 +1,11 @@
 package com.bumptech.glide.module;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Registry;
+
+import androidx.annotation.NonNull;
 
 /** An internal interface, to be removed when {@link GlideModule}s are removed. */
 // Used only in javadocs.

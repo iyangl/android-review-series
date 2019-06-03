@@ -130,6 +130,9 @@ public class RequestManager implements LifecycleListener, ModelTypes<RequestBuil
     this.requestTracker = requestTracker;
     this.context = context;
 
+    // 工厂内部判断是否有网络权限
+    // 无权限 -> NullConnectivityMonitor（空实现）
+    // 有权限 -> DefaultConnectivityMonitor
     connectivityMonitor =
         factory.build(
             context.getApplicationContext(),

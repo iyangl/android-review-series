@@ -224,6 +224,7 @@ public class Glide implements ComponentCallbacks2 {
   private static void checkAndInitializeGlide(@NonNull Context context) {
     // In the thread running initGlide(), one or more classes may call Glide.get(context).
     // Without this check, those calls could trigger infinite recursion.
+    // 双重检查下还会重复初始化，直接抛异常
     if (isInitializing) {
       throw new IllegalStateException(
           "You cannot call Glide.get() in registerComponents(),"
@@ -269,6 +270,9 @@ public class Glide implements ComponentCallbacks2 {
     initializeGlide(context, new GlideBuilder());
   }
 
+  /**
+   * 初始化！！！
+   */
   @SuppressWarnings("deprecation")
   private static void initializeGlide(@NonNull Context context, @NonNull GlideBuilder builder) {
     Context applicationContext = context.getApplicationContext();
