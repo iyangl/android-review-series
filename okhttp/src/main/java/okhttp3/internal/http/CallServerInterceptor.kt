@@ -46,6 +46,13 @@ class CallServerInterceptor(private val forWebSocket: Boolean) : Interceptor {
       // If there's a "Expect: 100-continue" header on the request, wait for a "HTTP/1.1 100
       // Continue" response before transmitting the request body. If we don't get that, return
       // what we did get (such as a 4xx response) without ever transmitting the request body.
+      // expect 100 continue header报文，是由客户端对http的post和get的请求策略决定的，
+      // 目的是为了避免浪费资源，如带宽，数据传输消耗的时间等等。
+      // 所以客户端会在发送header的时候添加expect 100去探探路，如果失败了就不用继续发送data，
+      // 从而减少了资源的浪费。
+      // https://www.jianshu.com/p/e1fa8eca79eb
+      // https://blog.csdn.net/zerooffdate/article/details/81513717
+      // https://www.oschina.net/news/77354/http-get-post-different?p=1  评论部分
       // 请求头中含有 100-continue，需要等待 HTTP / 1.1 100 Continue 响应
       if ("100-continue".equals(request.header("Expect"), ignoreCase = true)) {
         // 刷新请求到底层socket

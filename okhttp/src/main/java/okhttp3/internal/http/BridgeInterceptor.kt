@@ -16,16 +16,14 @@
  */
 package okhttp3.internal.http
 
-import java.io.IOException
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.Interceptor
 import okhttp3.Response
-import okhttp3.internal.userAgent
-import okio.GzipSource
-
 import okhttp3.internal.hostHeader
+import okio.GzipSource
 import okio.buffer
+import java.io.IOException
 
 /**
  * Bridges from application code to network code. First it builds a network request from a user
@@ -86,7 +84,7 @@ class BridgeInterceptor(private val cookieJar: CookieJar) : Interceptor {
     }
 
     if (userRequest.header("User-Agent") == null) {
-      requestBuilder.header("User-Agent", userAgent)
+      requestBuilder.header("User-Agent", "android")
     }
 
     // 链式调用拦截器的 intercept，返回最终的 response
