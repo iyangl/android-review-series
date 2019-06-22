@@ -10,8 +10,7 @@ import android.view.View
  * author: ly
  * date  : 2019/6/22 11:37
  * desc  : x
- * [安卓自定义View进阶-Canvas之绘制图形<a>
-</a>](https://www.gcssloop.com/customview/Canvas_BasicGraphics)
+ * [安卓自定义View进阶-Canvas之绘制图形](https://www.gcssloop.com/customview/Canvas_BasicGraphics)
  */
 class SloopView_2 : View {
 

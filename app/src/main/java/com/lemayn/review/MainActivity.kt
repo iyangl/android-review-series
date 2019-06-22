@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.FrameLayout.LayoutParams
 import com.lemayn.review.widget.SloopView_1
 import com.lemayn.review.widget.SloopView_2
+import com.lemayn.review.widget.SloopView_3
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         when (item?.itemId) {
             R.id.menu1 -> show(SloopView_1(this))
             R.id.menu2 -> show(SloopView_2(this))
+            R.id.menu3 -> show(SloopView_3(this))
         }
         return false
     }

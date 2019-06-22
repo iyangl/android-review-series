@@ -12,4 +12,9 @@
         android:title="menu2"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/menu3"
+        android:title="menu3"
+        app:showAsAction="never"/>
+
 </menu>
