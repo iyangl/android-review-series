@@ -17,6 +17,7 @@ import android.view.View
 class SloopView_3 : View {
 
     private var flag = 0
+    private var delay = 2000L
     private val paint = Paint()
     private var mWidth = 0
     private var mHeight = 0
@@ -82,20 +83,23 @@ class SloopView_3 : View {
             4 -> drawScale(canvas, .5f, .5f) // 根据缩放中心缩小到n
             5 -> drawScale(canvas, 1f, 1f) // 没有变化
             6 -> drawScale(canvas, 2f, 2f) // 根据缩放中心放大n倍
-            7 -> drawSth(canvas)
+            7 -> drawSthScale(canvas) // 叠加缩放
         }
 
         postDelayed({
             flag++
             postInvalidateOnAnimation()
-        }, 2000)
+        }, delay)
     }
 
     private fun drawScale(canvas: Canvas, sx: Float, sy: Float) {
+        delay = 500
+
         // 位移是基于当前位置移动，且多次位移是叠加的
         paint.color = Color.BLACK
         paint.style = Paint.Style.FILL
-        canvas.translate(500f, 800f)
+        // 将坐标系原点移动到画布正中心
+        canvas.translate(mWidth / 2f, mHeight / 2f)
         canvas.drawCircle(0f, 0f, 100f, paint)
 
         // scale 只对之后绘制的内容起作用，且 scale 是可以叠加的
@@ -106,7 +110,11 @@ class SloopView_3 : View {
         canvas.drawCircle(0f, 0f, 100f, paint)
     }
 
-    private fun drawSth(canvas: Canvas) {
+    private fun drawSthScale(canvas: Canvas) {
+        delay = 2000
+
+        paint.style = Paint.Style.STROKE
+
         // 将坐标系原点移动到画布正中心
         canvas.translate(mWidth / 2f, mHeight / 2f)
 
