@@ -12,7 +12,7 @@ import android.view.View
 /**
  * author: ly
  * date  : 2019/6/22 11:37
- * desc  : [安卓自定义View进阶-分类与流程](https://www.gcssloop.com/customview/CustomViewProcess)
+ * desc  : [安卓自定义View进阶-Canvas之画布操作](https://www.gcssloop.com/customview/Canvas_Convert)
  */
 class SloopView_3 : View {
 
@@ -74,8 +74,10 @@ class SloopView_3 : View {
     // 实际执行绘制的函数
     @SuppressWarnings("unused")
     override fun onDraw(canvas: Canvas) {
+        // 使用 save、restore 包裹绘制内容，防止污染状态栈
+        canvas.save()
 
-        when (flag % 8) {
+        when (flag % 12) {
             0 -> drawScale(canvas, -2f, -2f) // 先根据缩放中心放大n倍，再根据中心轴进行翻转
             1 -> drawScale(canvas, -1f, -1f) // 根据缩放中心轴进行翻转
             2 -> drawScale(canvas, -.5f, -.5f) // 先根据缩放中心缩小到n，再根据中心轴进行翻转
@@ -84,7 +86,13 @@ class SloopView_3 : View {
             5 -> drawScale(canvas, 1f, 1f) // 没有变化
             6 -> drawScale(canvas, 2f, 2f) // 根据缩放中心放大n倍
             7 -> drawSthScale(canvas) // 叠加缩放
+            8 -> drawRotate(canvas, 0f, 0f) // 旋转中心为原点
+            9 -> drawRotate(canvas, 200f, -50f) // 旋转中心为 200,50
+            10 -> drawSthRotate(canvas) // 叠加旋转
+            11 -> drawSkew(canvas) // 错切
         }
+
+        canvas.restore()
 
         postDelayed({
             flag++
@@ -126,4 +134,60 @@ class SloopView_3 : View {
         }
     }
 
+    private fun drawRotate(canvas: Canvas, px: Float, py: Float) {
+        delay = 500
+
+        // 将坐标系原点移动到画布正中心
+        canvas.translate(mWidth / 2f, mHeight / 2f)
+
+        val rect = RectF(0f, -400f, 400f, 0f) // 矩形区域
+
+        paint.color = Color.BLACK // 绘制黑色矩形
+        canvas.drawRect(rect, paint)
+
+        canvas.rotate(180f, px, py) // 旋转180度 <-- 默认旋转中心为 px py
+
+        paint.color = Color.BLUE // 绘制蓝色矩形
+        canvas.drawRect(rect, paint)
+    }
+
+    private fun drawSthRotate(canvas: Canvas) {
+        delay = 2000
+
+        paint.style = Paint.Style.STROKE
+
+        canvas.translate(mWidth / 2f, mHeight / 2f)
+
+        canvas.drawCircle(0f, 0f, 500f, paint)
+        canvas.drawCircle(0f, 0f, 480f, paint)
+
+        for (i in 1..36) {
+            canvas.rotate(10f)
+            canvas.drawLine(0f, 480f, 0f, 500f, paint)
+        }
+    }
+
+    /**
+     * float sx:将画布在x方向上倾斜相应的角度，sx倾斜角度的tan值，
+     * float sy:将画布在y轴方向上倾斜相应的角度，sy为倾斜角度的tan值.
+     * 错切
+     * X = x + sx * y
+     * Y = sy * x + y
+     */
+    private fun drawSkew(canvas: Canvas) {
+        delay = 500
+
+        // 将坐标系原点移动到画布正中心
+        canvas.translate(mWidth / 2f, mHeight / 2f)
+
+        val rect = RectF(0f, 0f, 200f, 200f) // 矩形区域
+
+        paint.color = Color.BLACK // 绘制黑色矩形
+        canvas.drawRect(rect, paint)
+
+        canvas.skew(1f, 0f) // 水平错切 <- 45度
+
+        paint.color = Color.BLUE // 绘制蓝色矩形
+        canvas.drawRect(rect, paint)
+    }
 }
