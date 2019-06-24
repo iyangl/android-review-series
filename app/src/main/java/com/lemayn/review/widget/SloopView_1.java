@@ -2,9 +2,12 @@ package com.lemayn.review.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+
+import static android.graphics.Color.BLACK;
 
 /**
  * author: ly
@@ -14,9 +17,24 @@ import android.view.View;
  */
 public class SloopView_1 extends View {
 
+    private int flag = 0;
+    private long delay = 2000L;
+    private Paint paint = new Paint();
+    private int mWidth = 0;
+    private int mHeight = 0;
+
     // 一般在直接 new 一个 View 的时候调用
     public SloopView_1(Context context) {
         super(context);
+        init();
+    }
+
+    private void init() {
+        // empty
+        paint.setStrokeWidth(10f);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(BLACK);
     }
 
     // 一般在 layout 文件中使用的时候会调用，关于它的所有属性(包括自定义属性)都会包含在 attrs 中传递进来
@@ -54,6 +72,8 @@ public class SloopView_1 extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         // w、h 为 view 的最终宽高
         super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = w;
+        mHeight = h;
     }
 
     /**
@@ -62,12 +82,12 @@ public class SloopView_1 extends View {
      */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
+        // empty
     }
 
     // 实际执行绘制的函数
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        // empty
     }
 }

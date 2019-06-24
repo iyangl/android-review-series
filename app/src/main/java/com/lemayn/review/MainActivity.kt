@@ -9,6 +9,7 @@ import android.widget.FrameLayout.LayoutParams
 import com.lemayn.review.widget.SloopView_1
 import com.lemayn.review.widget.SloopView_2
 import com.lemayn.review.widget.SloopView_3
+import com.lemayn.review.widget.SloopView_4
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        show(SloopView_4(this))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menu1 -> show(SloopView_1(this))
             R.id.menu2 -> show(SloopView_2(this))
             R.id.menu3 -> show(SloopView_3(this))
+            R.id.menu4 -> show(SloopView_4(this))
         }
         return false
     }
