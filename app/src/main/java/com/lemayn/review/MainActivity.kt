@@ -6,10 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout.LayoutParams
-import com.lemayn.review.widget.SloopView_1
-import com.lemayn.review.widget.SloopView_2
-import com.lemayn.review.widget.SloopView_3
-import com.lemayn.review.widget.SloopView_4
+import com.lemayn.review.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        show(SloopView_4(this))
+        show(SloopView_5(this))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
