@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.Color.RED
 import android.graphics.Paint
 import android.graphics.Path
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.View
 
@@ -17,8 +19,8 @@ import android.view.View
  **/
 class SloopView_5 : View {
 
-    private val flag = 0
-    private val delay = 2000L
+    private var flag = 5
+    private var delay = 2000L
     private val paint = Paint()
     private var mWidth = 0
     private var mHeight = 0
@@ -76,14 +78,39 @@ class SloopView_5 : View {
     }
 
     // 实际执行绘制的函数
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDraw(canvas: Canvas) {
+        paint.strokeWidth = 3f
+        paint.style = Paint.Style.STROKE
+        paint.color = RED
+
         canvas.translate(mWidth / 2f, mHeight / 2f)
-        canvas.drawLine(-mWidth / 2f, 0f, mWidth / 2f, 0f, paint)
-        canvas.drawLine(0f, -mHeight / 2f, 0f, mHeight / 2f, paint)
+        if (flag % 6 < 5) {
+            canvas.drawLine(-mWidth / 2f, 0f, mWidth / 2f, 0f, paint)
+            canvas.drawLine(0f, -mHeight / 2f, 0f, mHeight / 2f, paint)
+        }
 
         paint.color = Color.BLACK
         paint.strokeWidth = 10f
         path.reset()
+
+        when (flag % 6) {
+            0 -> drawLines(canvas)
+            1 -> drawShapes(canvas, Path.Direction.CW, 0f, 0f)
+            2 -> drawShapes(canvas, Path.Direction.CCW, 0f, 0f)
+            3 -> drawShapes(canvas, Path.Direction.CW, 0f, -200f)
+            4 -> drawArc(canvas)
+            5 -> drawCobweb(canvas)
+        }
+
+        postDelayed({
+            flag++
+            postInvalidateOnAnimation()
+        }, delay)
+    }
+
+    private fun drawLines(canvas: Canvas) {
+        delay = 500
 
         path.lineTo(200f, 200f)
         // 将最后一个点的位置强制修改为 200,100
@@ -94,4 +121,63 @@ class SloopView_5 : View {
         path.close()
         canvas.drawPath(path, paint)
     }
+
+    private fun drawShapes(canvas: Canvas, dir: Path.Direction, fx: Float, fy: Float) {
+        // CW：顺时针  CWW：逆时针
+        path.addRect(-200f, -200f, 200f, 200f, dir)
+        // 重置最后一个点的坐标，会影响 CW、CCW 绘制出的图形
+        path.setLastPoint(-300f, 300f)
+
+        path.addPath(path, fx, fy)
+        canvas.drawPath(path, paint)
+    }
+
+    private fun drawArc(canvas: Canvas) {
+//        path.addArc(0f, 0f, 200f, 200f, 270f, -234f)
+        path.lineTo(120f, 80f)
+        path.arcTo(0f, 0f, 200f, 200f, 270f, -234f, false)
+        canvas.drawPath(path, paint)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun drawCobweb(canvas: Canvas) {
+
+        delay = 2000
+
+        paint.strokeWidth = 3f
+        paint.color = Color.argb(.3f, 0f, 0f, 0f)
+
+        canvas.save()
+
+        for (i in 1..6) {
+            path.moveTo(-30f * i, 52f * i)
+            path.lineTo(30f * i, 52f * i)
+        }
+        path.moveTo(-60f * 6, 0f)
+        path.lineTo(0f, 0f)
+
+        for (i in 0..5) {
+            canvas.drawPath(path, paint)
+            canvas.rotate(60f)
+        }
+
+        canvas.restore()
+
+        paint.color = Color.argb(.5f, 0f, 0f, 255f)
+        paint.style = Paint.Style.FILL
+
+        path.reset()
+
+        path.moveTo(-60f * 3, 0f * 3)
+        path.lineTo(-30f * 1, 52f * 1)
+        path.lineTo(0f * 6, 52f * 6)
+        path.lineTo(30f * 2, 52f * 2)
+        path.lineTo(60f * 0, 0f)
+        path.lineTo(30f * 4, -52f * 4)
+        path.lineTo(-30f * 5, -52f * 5)
+        path.close()
+
+        canvas.drawPath(path, paint)
+    }
+
 }

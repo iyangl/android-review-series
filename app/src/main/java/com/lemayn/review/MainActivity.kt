@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menu2 -> show(SloopView_2(this))
             R.id.menu3 -> show(SloopView_3(this))
             R.id.menu4 -> show(SloopView_4(this))
+            R.id.menu5 -> show(SloopView_5(this))
         }
         return false
     }
