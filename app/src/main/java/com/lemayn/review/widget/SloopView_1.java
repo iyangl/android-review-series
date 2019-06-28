@@ -3,11 +3,12 @@ package com.lemayn.review.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import static android.graphics.Color.BLACK;
+import static android.graphics.Color.RED;
 
 /**
  * author: ly
@@ -20,6 +21,7 @@ public class SloopView_1 extends View {
     private int flag = 0;
     private long delay = 2000L;
     private Paint paint = new Paint();
+    private Path path = new Path();
     private int mWidth = 0;
     private int mHeight = 0;
 
@@ -31,10 +33,10 @@ public class SloopView_1 extends View {
 
     private void init() {
         // empty
-        paint.setStrokeWidth(10f);
+        paint.setStrokeWidth(3f);
         paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(RED);
     }
 
     // 一般在 layout 文件中使用的时候会调用，关于它的所有属性(包括自定义属性)都会包含在 attrs 中传递进来
@@ -88,6 +90,9 @@ public class SloopView_1 extends View {
     // 实际执行绘制的函数
     @Override
     protected void onDraw(Canvas canvas) {
-        // empty
+        canvas.translate(mWidth / 2f, mHeight / 2f);
+        canvas.scale(1f, -1f);
+
+
     }
 }

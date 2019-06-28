@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        show(SloopView_5(this))
+        show(SloopView_6(this))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
