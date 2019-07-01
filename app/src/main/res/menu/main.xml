@@ -27,4 +27,14 @@
         android:title="menu5"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/menu6_1"
+        android:title="menu6_1"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu6_2"
+        android:title="menu6_2"
+        app:showAsAction="never"/>
+
 </menu>

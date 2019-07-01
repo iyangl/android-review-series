@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        show(SloopView_6(this))
+        show(SloopView_6(this, false))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
             R.id.menu3 -> show(SloopView_3(this))
             R.id.menu4 -> show(SloopView_4(this))
             R.id.menu5 -> show(SloopView_5(this))
+            R.id.menu6_1 -> show(SloopView_6(this, true))
+            R.id.menu6_2 -> show(SloopView_6(this, false))
         }
         return false
     }
