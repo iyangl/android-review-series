@@ -17,7 +17,7 @@ import android.view.View
  **/
 class SloopView_6 : View {
 
-    private val C = 0.551915024494f // 一个常量，用来计算绘制圆形贝塞尔曲线控制点的位置
+    private val FACTOR = 0.551915024494f // 一个常量，用来计算绘制圆形贝塞尔曲线控制点的位置
 
     private var flag = 0
     private var delay = 2000L
@@ -103,13 +103,15 @@ class SloopView_6 : View {
     override fun onDraw(canvas: Canvas) {
         drawCoordinate(canvas)
 
-        drawBezierHeart(canvas)
+        if (flag % 2 == 0) {
+            drawBezierHeart(canvas)
+        } else {
+            path.moveTo(startPoint.x.toFloat(), startPoint.y.toFloat())
+            path.quadTo(controlPoint.x.toFloat(), controlPoint.y.toFloat(), endPoint.x.toFloat(), endPoint.y.toFloat())
+            canvas.drawPath(path, paint)
+        }
 
-        return
 
-        path.moveTo(startPoint.x.toFloat(), startPoint.y.toFloat())
-        path.quadTo(controlPoint.x.toFloat(), controlPoint.y.toFloat(), endPoint.x.toFloat(), endPoint.y.toFloat())
-        canvas.drawPath(path, paint)
     }
 
     private fun drawCoordinate(canvas: Canvas) {
@@ -121,21 +123,37 @@ class SloopView_6 : View {
         path.reset()
 
         canvas.translate(mWidth / 2f, mHeight / 2f)
-        canvas.drawLine(-mWidth / 2f, 0f, mWidth / 2f, 0f, paint)
-        canvas.drawLine(0f, -mHeight / 2f, 0f, mHeight / 2f, paint)
+        if (flag % 2 == 1) {
+            canvas.drawLine(-mWidth / 2f, 0f, mWidth / 2f, 0f, paint)
+            canvas.drawLine(0f, -mHeight / 2f, 0f, mHeight / 2f, paint)
+        }
         canvas.scale(1f, -1f)
 
-        canvas.drawLine(startPoint.x.toFloat(), startPoint.y.toFloat(),
-                controlPoint.x.toFloat(), controlPoint.y.toFloat(), paint)
-        canvas.drawLine(endPoint.x.toFloat(), endPoint.y.toFloat(),
-                controlPoint.x.toFloat(), controlPoint.y.toFloat(), paint)
+        if (flag % 2 == 1) {
+            canvas.drawLine(startPoint.x.toFloat(), startPoint.y.toFloat(),
+                    controlPoint.x.toFloat(), controlPoint.y.toFloat(), paint)
+            canvas.drawLine(endPoint.x.toFloat(), endPoint.y.toFloat(),
+                    controlPoint.x.toFloat(), controlPoint.y.toFloat(), paint)
+        }
 
         paint.color = BLACK
     }
 
     private fun drawBezierHeart(canvas: Canvas) {
+        path.moveTo(0f, 300f)
+        path.cubicTo(300f * FACTOR, 300f, 300f, 300f * FACTOR, 300f, 0f)
+        path.cubicTo(300f, -300f * FACTOR, 300f * FACTOR, -300f, 0f, -300f)
+        path.cubicTo(-300f * FACTOR, -300f, -300f, -300f * FACTOR, -300f, 0f)
+        path.cubicTo(-300f, 300f * FACTOR, -300f * FACTOR, 300f, 0f, 300f)
+        canvas.drawPath(path, paint)
 
-
+        paint.color = Color.RED
+        path.reset()
+        path.moveTo(0f, 120f)
+        path.cubicTo(300f * FACTOR, 300f, 300f, 300f * FACTOR, 300f, 0f)
+        path.cubicTo(270f, -300f * FACTOR, 300f * FACTOR, -180f, 0f, -300f)
+        path.cubicTo(-300f * FACTOR, -180f, -270f, -300f * FACTOR, -300f, 0f)
+        path.cubicTo(-300f, 300f * FACTOR, -300f * FACTOR, 300f, 0f, 120f)
         canvas.drawPath(path, paint)
     }
 }
