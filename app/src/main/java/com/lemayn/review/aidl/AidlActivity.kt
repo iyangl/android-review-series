@@ -1,4 +1,4 @@
-package com.lemayn.review
+package com.lemayn.review.aidl
 
 import android.content.ComponentName
 import android.content.Context
@@ -8,11 +8,10 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.RemoteException
 import android.support.v7.app.AppCompatActivity
-import com.lemayn.review.aidl.IMyAidlInterface
-import com.lemayn.review.aidl.MyAidlInterface
+import com.lemayn.review.R
 
 
-class MainActivity : AppCompatActivity() {
+class AidlActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
