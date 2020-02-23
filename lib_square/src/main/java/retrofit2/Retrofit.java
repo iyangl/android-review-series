@@ -130,15 +130,19 @@ public final class Retrofit {
   @SuppressWarnings("unchecked") // Single-interface proxy creation guarded by parameter safety.
   public <T> T create(final Class<T> service) {
     Utils.validateServiceInterface(service);
+    // 激进化的渴望验证接口合法性
     if (validateEagerly) { // 默认false
-      // 提前将接口中方法通过反射缓存起来
+      // 在创建的一瞬间把所有的验证做完
+      // 有利于调试，不利于性能
       eagerlyValidateMethods(service);
     }
+    // 什么是动态代理
     return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[] { service },
         new InvocationHandler() {
           private final Platform platform = Platform.get();
           private final Object[] emptyArgs = new Object[0];
 
+          // 本质上是一个回调方法
           @Override public @Nullable Object invoke(Object proxy, Method method,
               @Nullable Object[] args) throws Throwable {
             // If the method is a method from Object then defer to normal invocation.
